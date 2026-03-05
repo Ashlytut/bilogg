@@ -9,6 +9,7 @@
         :root {
             --forest-green: #1B3022;
             --emerald: #2D5A27;
+            --mint-glow: #A3CFBB;
             --gold: #C5A059;
             --paper: #FDFBF7;
             --text-main: #2C3639;
@@ -19,42 +20,40 @@
             padding: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             height: 100vh;
             background: #0D1611;
             font-family: 'Inter', sans-serif;
             overflow: hidden;
-            perspective: 1000px;
+            position: relative;
         }
 
         body::before {
             content: '';
             position: absolute;
-            width: 150%;
-            height: 150%;
-            background: radial-gradient(circle at center, rgba(45, 90, 39, 0.15) 0%, transparent 60%);
-            animation: slowRotate 20s infinite linear;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(45, 90, 39, 0.25) 0%, transparent 70%);
+            pointer-events: none;
         }
 
-        @keyframes slowRotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 10vh;
+            z-index: 2;
         }
 
-        /* ENVELOPE WRAPPER: Moves DOWN when opened */
         .envelope-wrapper {
             position: relative;
             width: 300px;
             height: 200px;
             cursor: pointer;
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 10;
-            transform: translateY(0);
-        }
-
-        /* This pushes the whole unit down so the letter has space at the top */
-        .opened.envelope-wrapper {
-            transform: translateY(25vh); 
+            transition: opacity 0.8s ease;
         }
 
         .envelope {
@@ -63,10 +62,9 @@
             height: 100%;
             background: var(--forest-green);
             border-radius: 4px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            z-index: 2;
-            overflow: hidden;
-            border: 1px solid rgba(197, 160, 89, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 5;
+            border: 1px solid rgba(163, 207, 187, 0.1);
         }
 
         .flap {
@@ -78,10 +76,112 @@
             border-right: 150px solid transparent;
             border-top: 120px solid #243E2C;
             transform-origin: top;
-            transition: transform 0.8s ease;
-            z-index: 5;
-            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
+            transition: transform 0.6s ease;
+            z-index: 6;
         }
+
+        .opened .flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .letter {
+            position: absolute;
+            top: 10px;
+            left: 5%;
+            width: 90%;
+            height: 20px;
+            background: var(--paper);
+            background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png');
+            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1), height 0.8s ease, opacity 0.5s;
+            z-index: 2;
+            border-radius: 2px;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        .opened .letter {
+            opacity: 1;
+            transform: translateY(210px); 
+            height: 60vh;
+            max-height: 500px;
+            z-index: 12;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+        }
+
+        .letter-border {
+            border: 1px solid var(--emerald);
+            margin: 10px;
+            height: calc(100% - 20px);
+            position: relative;
+            background: rgba(253, 251, 247, 0.4);
+            animation: borderPulse 4s infinite;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes borderPulse {
+            0%, 100% { border-color: var(--emerald); }
+            50% { border-color: var(--mint-glow); }
+        }
+
+        .letter-content {
+            padding: 20px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease 0.8s;
+            height: 100%;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .opened .letter-content {
+            opacity: 1;
+        }
+
+        h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.7rem;
+            color: var(--emerald);
+            margin: 0 0 15px 0;
+        }
+
+        p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            margin-bottom: 12px;
+        }
+
+        .btn-container {
+            margin-top: 10px;
+            padding-bottom: 20px;
+        }
+
+        .yes-btn, .exit-btn {
+            background: var(--forest-green);
+            color: var(--paper);
+            border: 1px solid var(--mint-glow);
+            padding: 12px 24px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            cursor: pointer;
+            width: 80%;
+            transition: 0.3s;
+        }
+
+        .exit-btn {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            width: 150px;
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .wax-seal {
             position: absolute;
@@ -90,233 +190,130 @@
             transform: translateX(-50%);
             width: 60px;
             height: 60px;
-            background: radial-gradient(circle at 30% 30%, #D4AF37, #8B6E2F);
+            background: radial-gradient(circle at 30% 30%, #2D5A27, #1B3022);
+            border: 2px solid var(--gold);
             border-radius: 50%;
-            z-index: 6;
+            z-index: 7;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-            transition: 0.5s;
-        }
-
-        .wax-seal::after {
-            content: 'A';
-            font-family: 'Cinzel', serif;
-            font-size: 24px;
-            color: rgba(255,255,255,0.7);
-        }
-
-        .letter {
-            position: absolute;
-            bottom: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 92%;
-            height: 90%;
-            background: var(--paper);
-            background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png');
-            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1;
-            visibility: hidden;
-            border-radius: 2px;
-        }
-
-        .opened .letter {
-            visibility: visible;
-            /* Slides up less than before to avoid hitting the top bar */
-            transform: translate(-50%, -35vh); 
-            height: 60vh; 
-            max-height: 480px;
-            width: 95%;
-            z-index: 8;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.7);
-        }
-
-        .letter-content {
-            opacity: 0;
-            transition: 1s ease 0.8s;
-            text-align: center;
-            padding: 30px 20px;
-            height: 100%;
-            overflow-y: auto; 
-            box-sizing: border-box;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .opened .letter-content { opacity: 1; }
-        .opened .flap { transform: rotateX(180deg); }
-        .opened .wax-seal { opacity: 0; transform: translateX(-50%) scale(0.5); pointer-events: none; }
-
-        h2 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 1.6rem;
-            color: var(--emerald);
-            margin-top: 0;
-            margin-bottom: 15px;
-        }
-
-        p {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
-            line-height: 1.6;
-            color: var(--text-main);
-            margin-bottom: 12px;
-            font-weight: 300;
-        }
-
-        .gold-divider {
-            width: 40px;
-            height: 1px;
-            background: var(--gold);
-            margin: 20px auto;
-        }
-
-        .invite {
-            font-family: 'Cinzel', serif;
-            font-size: 0.75rem;
-            color: var(--emerald);
-            font-weight: 700;
-        }
-
-        .btn-container {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: center;
-            padding-bottom: 40px;
-        }
-
-        .yes-btn {
-            background: var(--forest-green);
             color: var(--gold);
-            border: 1px solid var(--gold);
-            padding: 12px 25px;
             font-family: 'Cinzel', serif;
-            text-transform: uppercase;
-            font-size: 0.7rem;
-            cursor: pointer;
-            width: 80%;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: 0.4s;
         }
 
-        .no-btn {
-            background: transparent;
-            color: #999;
-            border: none;
-            font-style: italic;
-            cursor: pointer;
-            padding: 5px;
+        .opened .wax-seal {
+            opacity: 0;
+            transform: translateX(-50%) scale(0.5);
         }
 
         .hint {
             position: absolute;
-            bottom: -40px;
+            bottom: -50px;
             width: 100%;
             text-align: center;
-            color: var(--gold);
+            color: var(--mint-glow);
             font-family: 'Cinzel', serif;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             letter-spacing: 2px;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-        .sparkle {
-            position: absolute;
-            pointer-events: none;
-            background: var(--gold);
-            border-radius: 50%;
-            animation: moveSparkle 4s linear forwards;
-        }
-
-        @keyframes moveSparkle {
-            0% { transform: translateY(0) scale(0); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(-100vh) scale(1); opacity: 0; }
+        @keyframes floatParticles {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.5; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <div class="envelope-wrapper" id="mainContainer" onclick="openLetter()">
+<div class="container" id="mainDiv">
+    <div class="envelope-wrapper" id="mainContainer" onclick="toggleEnvelope()">
         <div class="flap"></div>
-        <div class="wax-seal"></div>
+        <div class="wax-seal">A</div>
         <div class="envelope"></div>
         
-        <div class="letter">
-            <div class="letter-content" id="letterContent">
-                <h2>Hi Ashley Angcolera,</h2>
-                
-                <p>A first-year student has been thinking for a while about how to say this properly. He truly admires how a third-year handles her journey with such confidence and intelligence.</p>
-                
-                <p>Every time he sees you around campus, he can't help but notice how beautiful you are. But more than that, he is more impressed by the kind of person you seem to be behind that beauty.</p>
-                
-                <p>He also noticed the way you dance. The energy and passion you show when you move is something truly amazing to watch.</p>
-
-                <p>He understands that your schedule as a third-year student is probably very busy, but he hopes that maybe someday you could have a short conversation and get to know each other better.</p>
-                
-                <div class="gold-divider"></div>
-                
-                <p class="invite">Would you be open to grabbing coffee or a quick meal sometime?</p>
-                
-                <div class="btn-container">
-                    <button class="yes-btn" onclick="celebrate(event)">I'd love that</button>
-                    <button class="no-btn" id="noBtn" onmouseover="dodge()" onclick="dodge(event)">Maybe next time</button>
+        <div class="letter" id="letter">
+            <div class="letter-border">
+                <div class="letter-content" id="lContent">
+                    <h2>Hi Ashley Angcolera,</h2>
+                    <p>A first-year student has been thinking for a while about how to say this properly. He truly admires how a third-year handles her journey with such confidence and intelligence.</p>
+                    <p>Every time he sees you around campus, he can't help but notice how beautiful you are. But more than that, he is more impressed by the kind of person you are behind it.</p>
+                    <p>He also noticed the way you dance. The energy and passion you show when you move is truly amazing to watch.</p>
+                    <p style="font-family: 'Cinzel', serif; color: var(--emerald); font-weight: 700; font-size: 0.8rem;">
+                        Would you be open to grabbing coffee or a quick meal sometime?
+                    </p>
+                    <div class="btn-container">
+                        <button class="yes-btn" onclick="acceptInvite(event)">I'd love that</button>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div class="hint" id="hintText">Break the Seal</div>
+        <div class="hint" id="hintText">Tap the Seal to Open</div>
     </div>
+</div>
 
-    <script>
-        function openLetter() {
-            document.getElementById('mainContainer').classList.add('opened');
-            document.getElementById('hintText').style.display = 'none';
+<button class="exit-btn" id="exitBtn" onclick="window.close(); alert('Thank you for reading, Ashley! ✨');">Exit</button>
+
+<script>
+    function toggleEnvelope() {
+        const container = document.getElementById('mainContainer');
+        const hint = document.getElementById('hintText');
+        container.classList.toggle('opened');
+        if(container.classList.contains('opened')) {
+            hint.style.opacity = '0';
+        } else {
+            hint.style.opacity = '1';
         }
+    }
 
-        function dodge() {
-            const btn = document.getElementById('noBtn');
-            const maxX = window.innerWidth - 100;
-            const maxY = window.innerHeight - 50;
-            btn.style.position = 'fixed';
-            btn.style.left = Math.random() * maxX + 'px';
-            btn.style.top = Math.random() * maxY + 'px';
-        }
-
-        function celebrate(e) {
-            e.stopPropagation();
-            const content = document.getElementById('letterContent');
-            content.style.opacity = '0';
+    function acceptInvite(e) {
+        e.stopPropagation(); // Prevents the envelope from re-opening instantly
+        const container = document.getElementById('mainContainer');
+        const exitBtn = document.getElementById('exitBtn');
+        const letterContent = document.getElementById('lContent');
+        
+        // 1. Fade out the text content first
+        letterContent.style.opacity = '0';
+        
+        setTimeout(() => {
+            // 2. Close the envelope/letter
+            container.classList.remove('opened');
             
+            // 3. Once envelope is closed, hide it and show exit button
             setTimeout(() => {
-                content.innerHTML = `
-                    <div style="padding-top: 20px;">
-                        <h2 style="font-size: 1.8rem;">Wonderful.</h2>
-                        <div class="gold-divider"></div>
-                        <p style="font-weight: 600;">I truly appreciate you making time.</p>
-                        <p style="color: #666; font-size: 0.85rem;">I'll reach out soon to find a moment <br>that works best for you. ☕✨</p>
-                    </div>
-                `;
-                content.style.opacity = '1';
-                setInterval(createSparkle, 50);
-            }, 600);
-        }
+                container.style.opacity = '0';
+                container.style.pointerEvents = 'none';
+                exitBtn.style.display = 'block';
+            }, 800);
+        }, 400);
+    }
 
-        function createSparkle() {
-            const p = document.createElement('div');
-            p.className = 'sparkle';
-            const size = Math.random() * 4 + 2;
-            p.style.width = size + 'px';
-            p.style.height = size + 'px';
-            p.style.left = Math.random() * 100 + '%';
-            p.style.top = '100%';
-            document.body.appendChild(p);
-            setTimeout(() => p.remove(), 4000);
-        }
-        setInterval(createSparkle, 600);
-    </script>
+    // Particle generation
+    const particleContainer = document.querySelector('body');
+    const particleCount = 25;
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.style.position = 'absolute';
+        particle.innerHTML = '✧'; 
+        particle.style.color = '#a3cfbb'; 
+        particle.style.fontSize = Math.random() * 15 + 5 + 'px';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.opacity = '0';
+        particle.style.pointerEvents = 'none';
+        particle.style.zIndex = '1';
+        const duration = Math.random() * 10 + 7 + 's';
+        const delay = Math.random() * 5 + 's';
+        particle.style.animation = `floatParticles ${duration} ${delay} linear infinite`;
+        particleContainer.appendChild(particle);
+    }
+</script>
+
 </body>
 </html>
