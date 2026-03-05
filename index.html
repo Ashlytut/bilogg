@@ -41,21 +41,16 @@
             to { transform: rotate(360deg); }
         }
 
+        /* ENVELOPE POSITIONING */
         .envelope-wrapper {
             position: relative;
-            width: 320px;
-            height: 220px;
+            width: 300px;
+            height: 200px;
             cursor: pointer;
-            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.6s ease, top 0.8s ease;
             z-index: 10;
-        }
-
-        @media (min-width: 768px) {
-            .envelope-wrapper { width: 380px; height: 260px; }
-        }
-
-        .envelope-wrapper:hover {
-            transform: scale(1.05);
+            /* Keeps the envelope lower on the screen by default */
+            top: 10vh; 
         }
 
         .envelope {
@@ -70,84 +65,67 @@
             border: 1px solid rgba(197, 160, 89, 0.2);
         }
 
-        .envelope::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.1) 50%);
-        }
-
         .flap {
             position: absolute;
             top: 0;
             width: 0;
             height: 0;
-            border-left: 160px solid transparent;
-            border-right: 160px solid transparent;
-            border-top: 130px solid #243E2C;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 120px solid #243E2C;
             transform-origin: top;
             transition: transform 0.8s ease;
             z-index: 5;
             filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
         }
 
-        @media (min-width: 768px) {
-            .flap { border-left: 190px solid transparent; border-right: 190px solid transparent; border-top: 150px solid #243E2C; }
-        }
-
         .wax-seal {
             position: absolute;
-            top: 100px;
+            top: 90px;
             left: 50%;
             transform: translateX(-50%);
-            width: 65px;
-            height: 65px;
+            width: 60px;
+            height: 60px;
             background: radial-gradient(circle at 30% 30%, #D4AF37, #8B6E2F);
             border-radius: 50%;
             z-index: 6;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.5), inset 0 0 10px rgba(0,0,0,0.2);
-            transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            transition: 0.5s;
         }
 
         .wax-seal::after {
             content: 'A';
             font-family: 'Cinzel', serif;
-            font-size: 28px;
+            font-size: 24px;
             color: rgba(255,255,255,0.7);
         }
 
         .letter {
             position: absolute;
-            bottom: 10px;
+            bottom: 5px;
             left: 50%;
             transform: translateX(-50%);
-            width: 90%;
+            width: 92%;
             height: 90%;
             background: var(--paper);
             background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png');
-            padding: 0;
-            box-sizing: border-box;
             transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1;
             visibility: hidden;
             border-radius: 2px;
-            overflow: hidden; 
         }
 
+        /* LETTER OPENED POSITION */
         .opened .letter {
             visibility: visible;
-            /* SLIDES THE LETTER HIGHER UP (Changed from -15vh to -28vh) */
-            transform: translate(-50%, -28vh); 
-            height: 75vh; 
-            max-height: 600px;
+            /* ADJUSTED: Reduced from -45vh to -30vh to move it LOWER */
+            transform: translate(-50%, -30vh); 
+            height: 65vh; 
+            max-height: 500px;
             width: 95%;
-            max-width: 450px;
             z-index: 8;
             box-shadow: 0 30px 60px rgba(0,0,0,0.7);
         }
@@ -156,8 +134,7 @@
             opacity: 0;
             transition: 1s ease 0.8s;
             text-align: center;
-            /* REDUCED TOP PADDING (Changed from 40px to 20px) */
-            padding: 20px 25px 40px 25px;
+            padding: 25px 20px;
             height: 100%;
             overflow-y: auto; 
             box-sizing: border-box;
@@ -165,83 +142,79 @@
         }
 
         .opened .letter-content { opacity: 1; }
-
         .opened .flap { transform: rotateX(180deg); }
         .opened .wax-seal { opacity: 0; transform: translateX(-50%) scale(0.5); pointer-events: none; }
 
         h2 {
             font-family: 'Dancing Script', cursive;
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             color: var(--emerald);
-            margin-bottom: 20px;
+            margin-top: 5px;
+            margin-bottom: 15px;
         }
 
         p {
             font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            line-height: 1.7;
+            font-size: 0.9rem;
+            line-height: 1.6;
             color: var(--text-main);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             font-weight: 300;
         }
 
         .gold-divider {
-            width: 50px;
+            width: 40px;
             height: 1px;
             background: var(--gold);
-            margin: 25px auto;
+            margin: 20px auto;
         }
 
         .invite {
             font-family: 'Cinzel', serif;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
+            font-size: 0.8rem;
             color: var(--emerald);
             font-weight: 700;
         }
 
         .btn-container {
-            margin-top: 30px;
+            margin-top: 25px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             align-items: center;
-            padding-bottom: 20px;
+            padding-bottom: 30px;
         }
 
         .yes-btn {
             background: var(--forest-green);
             color: var(--gold);
             border: 1px solid var(--gold);
-            padding: 14px 30px;
+            padding: 12px 25px;
             font-family: 'Cinzel', serif;
             text-transform: uppercase;
-            letter-spacing: 2px;
             font-size: 0.7rem;
             cursor: pointer;
-            transition: 0.4s;
-            width: 80%;
+            width: 85%;
         }
 
         .no-btn {
             background: transparent;
             color: #999;
             border: none;
-            font-family: 'Inter', sans-serif;
             font-style: italic;
             cursor: pointer;
-            padding: 10px;
+            padding: 5px;
         }
 
         .hint {
             position: absolute;
-            bottom: -50px;
+            bottom: -40px;
             width: 100%;
             text-align: center;
             color: var(--gold);
             font-family: 'Cinzel', serif;
-            font-size: 0.7rem;
-            letter-spacing: 3px;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
             animation: pulse 2s infinite;
         }
 
@@ -264,8 +237,6 @@
 </head>
 <body>
 
-    <div id="particles"></div>
-
     <div class="envelope-wrapper" id="mainContainer" onclick="openLetter()">
         <div class="flap"></div>
         <div class="wax-seal"></div>
@@ -286,8 +257,6 @@
                 <div class="gold-divider"></div>
                 
                 <p class="invite">Would you be open to grabbing coffee or a quick meal sometime?</p>
-                
-                <p style="font-size: 0.8rem; color: #777;">A simple talk, no pressure — just a break from the school stress.</p>
                 
                 <div class="btn-container">
                     <button class="yes-btn" onclick="celebrate(event)">I'd love that</button>
@@ -312,7 +281,6 @@
             btn.style.position = 'fixed';
             btn.style.left = Math.random() * maxX + 'px';
             btn.style.top = Math.random() * maxY + 'px';
-            btn.style.transition = 'all 0.3s ease';
         }
 
         function celebrate(e) {
@@ -323,10 +291,10 @@
             setTimeout(() => {
                 content.innerHTML = `
                     <div style="padding-top: 20px;">
-                        <h2 style="font-size: 2rem;">Wonderful.</h2>
+                        <h2 style="font-size: 1.8rem;">Wonderful.</h2>
                         <div class="gold-divider"></div>
-                        <p style="font-weight: 600; letter-spacing: 1px;">I truly appreciate you making time.</p>
-                        <p style="color: #666; font-size: 0.9rem;">I'll reach out soon to find a moment <br>that works best for you. ☕✨</p>
+                        <p style="font-weight: 600;">I truly appreciate you making time.</p>
+                        <p style="color: #666; font-size: 0.85rem;">I'll reach out soon to find a moment <br>that works best for you. ☕✨</p>
                     </div>
                 `;
                 content.style.opacity = '1';
@@ -345,7 +313,6 @@
             document.body.appendChild(p);
             setTimeout(() => p.remove(), 4000);
         }
-
         setInterval(createSparkle, 600);
     </script>
 </body>
